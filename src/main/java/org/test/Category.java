@@ -1,6 +1,10 @@
+package org.test;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Category {
     private String name;
@@ -65,21 +69,24 @@ public class Category {
     }
 
     public List<String> getAllKeyWords() {
-        List<String> allKeywords = new ArrayList<>(this.keyWords);
         if (this.majorCategory != null) {
-            allKeywords.addAll(this.majorCategory.getKeyWords());
+            List<String> inheritedKeys = this.majorCategory.getAllKeyWords();
+            return Stream.concat(this.keyWords.stream(), inheritedKeys.stream())
+                    .distinct()
+                    .collect(Collectors.toList());
+
+        } else {
+            return new ArrayList<>(this.keyWords);
         }
-        return allKeywords;
     }
 
-    public int getCategoryLevel(){
+    public int getCategoryLevel() {
         int level = 0;
-        Category currentCategory = this.majorCategory;
-        while (currentCategory != null){
-            level++;
-            currentCategory = currentCategory.getMajorCategory();
+        if (majorCategory == null) {
+            return level;
+        } else {
+            level = 1 + majorCategory.getCategoryLevel();
         }
-
         return level;
     }
 }
