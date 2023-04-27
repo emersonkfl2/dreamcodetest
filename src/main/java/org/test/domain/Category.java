@@ -1,4 +1,4 @@
-package org.test;
+package org.test.domain;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,29 +64,4 @@ public class Category {
         return Objects.hash(name, keyWords, majorCategory, subCategory);
     }
 
-    public void addSubCategory(Category subCategory) {
-        this.subCategory.add(subCategory);
-    }
-
-    public List<String> getAllKeyWords() {
-        if (this.majorCategory != null) {
-            List<String> inheritedKeys = this.majorCategory.getAllKeyWords();
-            return Stream.concat(this.keyWords.stream(), inheritedKeys.stream())
-                    .distinct()
-                    .collect(Collectors.toList());
-
-        } else {
-            return new ArrayList<>(this.keyWords);
-        }
-    }
-
-    public int getCategoryLevel() {
-        int level = 0;
-        if (majorCategory == null) {
-            return level;
-        } else {
-            level = 1 + majorCategory.getCategoryLevel();
-        }
-        return level;
-    }
 }
